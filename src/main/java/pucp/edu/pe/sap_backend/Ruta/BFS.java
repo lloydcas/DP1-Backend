@@ -96,7 +96,15 @@ public class BFS {
         int dist = parent.dist + 1;
         Cell p = cells[x][y];
 
-        if (dist < p.dist) {
+        boolean bloquea;
+
+        if(map.getMap()[x][y]!=null && map.getMap()[x][y].getBloqueado()){
+            bloquea = false;
+        }else{
+            bloquea = true;
+        }
+
+        if (dist < p.dist && bloquea) {
             p.dist = dist;
             p.prev = parent;
             queue.add(p);

@@ -238,4 +238,17 @@ public class Vehiculo {
         }
         this.route = route;
     }
+
+    public int remainingCapacity(){
+        return capacity - order.stream().mapToInt(order -> order.getAmount()).sum();
+    }
+
+    public void imprimirUltimaRuta(){
+        for (Cell cell : route) {
+            //System.out.print("(X=" + cell.getX() + " , Y=" + cell.getY()+ " ) ;");
+            System.out.print("(" +cell.getX() + ", " + cell.getY()+ ") ; ");
+        }
+        System.out.println();
+
+    }
 }

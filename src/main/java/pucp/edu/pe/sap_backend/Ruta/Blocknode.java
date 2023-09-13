@@ -15,11 +15,13 @@ public class Blocknode {
 
     private ArrayList<LocalDateTime> startTime;
     private ArrayList<LocalDateTime> endTime;
-
+    private Boolean bloqueado;
     public Blocknode() {
         this.startTime = new ArrayList<>();
         this.endTime = new ArrayList<>();
+        this.bloqueado = true;
     }
+
 
     public ArrayList<LocalDateTime> getStartTime() {
         return startTime;
@@ -37,5 +39,8 @@ public class Blocknode {
         this.endTime = endTime;
     }
 
+    public Boolean getBloqueado() {
+        return bloqueado;
+    }
 }
 

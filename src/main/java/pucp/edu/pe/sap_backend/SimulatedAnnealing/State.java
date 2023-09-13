@@ -9,17 +9,24 @@ import java.util.List;
 
 public class State {
     private List<Vehiculo> vehiculo;
+    private List<Pedido> pedidos;
     private Problem problem;
 
+
+
     private BFS blocks;
+
     private int almacenX;
     private int almacenY;
 
-    public State(List<Vehiculo> vehiculo, BFS blocks, int almacenX, int almacenY) {
+
+
+    public State(List<Vehiculo> vehiculo, BFS blocks, int almacenX, int almacenY,List<Pedido>pedidos) {
         this.vehiculo = vehiculo;
         this.blocks = blocks;
         this.almacenX = almacenX;
         this.almacenY = almacenY;
+        this.pedidos = pedidos;
     }
     public State(List<Vehiculo> vehiculo, Problem problem) {
         this.vehiculo = vehiculo;
@@ -45,8 +52,15 @@ public class State {
         return totalCost;
     }
     public double calculateEnergyForEach(Vehiculo vehicle, BFS blocks, int almacenX, int almacenY) {
-        Pedido[] pedidos = vehicle.getOrder().toArray(new Pedido[0]);
-        Path path = new Path(pedidos, blocks, almacenX, almacenY);
+        List<Pedido> pedidos = vehicle.getOrder();
+
+        // Check if the pedidos list is empty before processing
+        if (pedidos.isEmpty()) {
+            return 0.0; // Return 0 energy if there are no pedidos
+        }
+
+        Pedido[] pedidosArray = pedidos.toArray(new Pedido[0]);
+        Path path = new Path(pedidosArray, blocks, almacenX, almacenY);
         return path.getCost();
     }
 
@@ -70,4 +84,19 @@ public class State {
 
         return sb.toString();
     }
+    public BFS getBlocks() {
+        return blocks;
+    }
+    public List<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public int getAlmacenX() {
+        return almacenX;
+    }
+
+    public int getAlmacenY() {
+        return almacenY;
+    }
+
 }

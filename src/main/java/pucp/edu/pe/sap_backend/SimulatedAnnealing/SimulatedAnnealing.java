@@ -6,9 +6,9 @@ import java.util.Random;
 
 public class SimulatedAnnealing {
     private Random random = new Random();
-    public State solution(Problem problem, Map<Integer, Double> schedule) {
+    public State solution(Problem problem, Map<Integer, Double> schedule,int maxIterations) {
         State current = problem.getInitialState(); // Use the updated method to get the initial state
-        for (int t = 1;; t++) {
+        for (int t = 0;t < maxIterations; t++) {
             double temperature = schedule.getOrDefault(t, 0.0);
             if (temperature == 0) {
                 return current;
@@ -19,6 +19,7 @@ public class SimulatedAnnealing {
                 current = next;
             }
         }
+        return current;
     }
 
 }

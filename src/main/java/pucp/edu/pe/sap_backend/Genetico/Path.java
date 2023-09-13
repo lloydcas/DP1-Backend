@@ -45,40 +45,39 @@ public class Path implements Comparable {
         cost =0;
         this.route = new LinkedList<>();
         calculateCost(almacenX,almacenY);
-        printRoute();
+        //printRoute();
         fitness =0;
     }
 
-    public void calculateCost(int almacenX, int almacenY) {
-        cost = 0;
-        // First node is car cost
+    public void calculateCost(int almacenX, int almacenY){
+        cost=0;
+        //first node is car cost
         int actualStock = path[0].getAmount();
         int nodeOrders;
         int minutes = 0;
-        // For car, getOrderDate has currentTime
+        //For car, getOrderDate has currentTime
         LocalDateTime estimatedTime;
         LinkedList<Cell> auxPath = new LinkedList<>();
-        // For car, maxHours contains type
-        int i = 0;
+        //For car, maxHours contains type
+        int i=0;
         Cell auxCell = null;
-        while (i < numOrders - 1) {
-            int[] start = { path[i].getX(), path[i].getY() };
-            int[] end = { path[i + 1].getX(), path[i + 1].getY() };
+        while(i<numOrders-1){
+            int[] start = {path[i].getX(),path[i].getY()};
+            int[] end = {path[i+1].getX(),path[i+1].getY()};
 
-            auxPath = blocks.shortestPath(start, end, 0, auxCell);
-            int aa = 0;
-            // ...
-            if (auxPath == null)
-                break;
+            auxPath =   blocks.shortestPath(start, end ,0,auxCell);
+            int aa=0;
+            ///
+            if(auxPath ==null) break;
             Cell auxgetLast = auxPath.getLast();
 
-            nodeOrders = path[i + 1].getAmount();
-            cost += auxgetLast.dist;
-            // Anhadido
+            nodeOrders = path[i+1].getAmount();
+            cost+=auxgetLast.dist;
+            //Anhadido
             auxPath.removeFirst();
-            // Modificado
-            if (path[i + 1].getAssigned() != 1) {
-                if (actualStock <= 0) {
+            //Modificado
+            if(path[i+1].getAssigned()!=1){
+                if(actualStock <= 0){
                     cost += 10000;
                     this.route.clear();
                     break;
@@ -86,30 +85,29 @@ public class Path implements Comparable {
                 actualStock = actualStock - nodeOrders;
             }
 
-            if (auxgetLast.blocked) {
-                auxgetLast.prev.prev = null;
-                auxCell = auxgetLast.prev;
-            } else {
-                auxCell = null;
-            }
-            // Anhadido
+            if(auxgetLast.blocked){
+                auxgetLast.prev.prev=null;
+                auxCell=auxgetLast.prev;
+            }else{ auxCell=null;}
+            //Anhadido
             this.route.addAll(auxPath);
             i++;
         }
-        int auxstart[] = { path[i].getX(), path[i].getY() };
-        int auxEnd[] = { almacenX, almacenY };
-        auxPath = blocks.shortestPath(auxstart, auxEnd, 0, auxCell);
-        if (auxPath == null) {
-            cost += 10000;
-            // Anhadido
+        int auxstart[]={path[i].getX(),path[i].getY()};
+        int auxEnd[]={almacenX,almacenY};
+        auxPath = blocks.shortestPath(auxstart, auxEnd,0,auxCell);
+        if(auxPath == null){
+            cost+=10000;
+            //Anhadido
             this.route.clear();
-        } else {
-            cost += auxPath.getLast().dist;
-            // Anhadido
+        }else{
+            cost+=auxPath.getLast().dist;
+            //Anhadido
             auxPath.removeFirst();
             this.route.addAll(auxPath);
         }
-        cost += path[path.length - 1].distance(path[0].getX(), path[0].getY());
+        cost+=path[path.length-1].distance(path[0].getX(), path[0].getY());
+
     }
 
     public int getFitness() {
