@@ -49,27 +49,26 @@ public class Problem {
     }
     private void modifyRoutes(State state){
         List<Vehiculo> vehiculos = state.getVehiculo();
-
-        // Select a random vehicle
-        Vehiculo randomVehicle = vehiculos.get(new Random().nextInt(vehiculos.size()));
-
-        // Get the available pedidos that have not been assigned to any vehicle
         List<Pedido> availablePedidos = state.getPedidos();
 
-        // You can implement your logic here to create a new route for the selected vehicle.
-        // For example, you can randomly select a subset of availablePedidos and assign them to the vehicle.
-        // Ensure that you also update the vehicle's route accordingly.
-        randomVehicle.getRoute().clear();
-        // For this example, let's assign available pedidos to the vehicle in a random order.
-        Collections.shuffle(availablePedidos);
+        for (Vehiculo vehicle : vehiculos) {
+            // Determine how to assign orders to each vehicle
+            // For example, you can evenly distribute the orders among vehicles.
+            LinkedList<Pedido> ordersForVehicle = new LinkedList<>();
 
-        // Create a new route for the vehicle using the selected pedidos
-        randomVehicle.setOrder(new LinkedList<>(availablePedidos));
+            for (int i = 0; i < availablePedidos.size(); i++) {
+                if (i % vehiculos.size() == vehiculos.indexOf(vehicle)) {
+                    ordersForVehicle.add(availablePedidos.get(i));
+                }
+            }
 
-        randomVehicle.generateRoute(state.getBlocks(), state.getAlmacenX(), state.getAlmacenY());
+            // Set the vehicle's route to the assigned orders
+            vehicle.setOrder(ordersForVehicle);
+            vehicle.generateRoute(state.getBlocks(), state.getAlmacenX(), state.getAlmacenY());
 
-        // Remove the assigned pedidos from the list of available pedidos
-        availablePedidos.removeAll(randomVehicle.getOrder());
+            // Remove the assigned orders from the list of available orders
+            availablePedidos.removeAll(ordersForVehicle);
+        }
     }
 
     public double calculateEnergy(State state) {

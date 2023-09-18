@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.LinkedList;
+import java.util.List;
 
 
 //@AllArgsConstructor
@@ -137,6 +138,13 @@ public class Vehiculo {
         this.xInicial = other.xInicial;
         this.yInicial = other.yInicial;
     }
+
+    public Vehiculo(int id, LinkedList<Pedido> pedidos){
+        this.id = id;
+        this.order = pedidos;
+    }
+
+
     public LinkedList<Pedido> getOrder() {
         return order;
     }
