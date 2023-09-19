@@ -58,10 +58,8 @@ public class SapBackEndApplication {
         BFS blocks = new BFS(new BlockMap(100,100));
         genetico.setBlocks(blocks);
 
-        Problem problem = new Problem(listaVehiculos,blocks,10,10,listaPedidos);
-        State initialState = problem.getInitialState();
 
-        /* //CON BLOQUEOS
+         //CON BLOQUEOS
         BlockMap map = new BlockMap(100,100);
 
         //bloquear  un camino
@@ -71,9 +69,12 @@ public class SapBackEndApplication {
         //map.getMap()[4][0].setBloqueado(false);
         map.getMap()[5][0] = new Blocknode();
         //map.getMap()[5][0].setBloqueado(false);
-        genetico.setBlocks(new BFS(map));*/
+        genetico.setBlocks(new BFS(map));
 
-        genetico.executeAlgorithm();
+        //genetico.executeAlgorithm();
+
+        Problem problem = new Problem(listaVehiculos,blocks,10,10,listaPedidos);
+        State initialState = problem.getInitialState();
         System.out.println("\nSimulated annealing: \n ");
 
         ////////////////////////////// Annealing////////////////////////
@@ -87,21 +88,32 @@ public class SapBackEndApplication {
         listaPedidos.add(pedido3);*/
 
         Map<Integer,Double> schedule = new HashMap<>();
-        schedule.put(0, 5000.0);
-        schedule.put(100, 4000.0);
-        schedule.put(200, 3000.0);
-        schedule.put(300, 2000.0);
-        schedule.put(400, 1500.0);
-        schedule.put(500, 1000.0);
-        schedule.put(600, 800.0);
-        schedule.put(700, 600.0);
-        schedule.put(800, 400.0);
-        schedule.put(900, 200.0);
+        schedule.put(0, 1000.0);
+        schedule.put(100, 1500.0);
+        schedule.put(200, 600.0);
+        schedule.put(300, 250.00);
+        schedule.put(400, 400.00);
+        schedule.put(500, 550.0);
+        schedule.put(600, 540.0);
+        schedule.put(700, 500.0);
+        schedule.put(800, 420.0);
+        schedule.put(900, 220.0);
         schedule.put(1000, 100.0);
-        int maxIterations = 1000;
+        int maxIterations = 100;
+
+        /*Map<Integer,Double> schedule = new HashMap<>();
+        double coolingRate = 0.995;
+        double initialTemp = 100.0;
+        int maxIterations = 100;
+        Map<Integer,Double> coolingSchedule = SimulatedAnnealing.generateCoolingSchedule(initialTemp,coolingRate,
+                                                                                         maxIterations);*/
+
+
+
         System.out.println("Initial state: "+ initialState.toString());
         SimulatedAnnealing annealing = new SimulatedAnnealing();
         State finalState = annealing.solution(problem,schedule,maxIterations);
+        //State finalState = annealing.solution(problem,coolingSchedule,maxIterations);
         finalState.twoOptLocalSearch(finalState);
         System.out.println("Final state: "+ finalState);
         System.out.println("Final state: "+ problem.calculateEnergy(finalState));
