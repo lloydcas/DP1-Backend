@@ -15,12 +15,12 @@ public class State {
     private List<Pedido> pedidos;
     private Problem problem;
 
-
-
     private BFS blocks;
 
     private int almacenX;
     private int almacenY;
+
+    private List<Almacen> almacenes;
 
     private List<Pedido> twoOptSwap(List<Pedido> route, int i, int j) {
         List<Pedido> newRoute = new ArrayList<>(route.size());
@@ -49,6 +49,14 @@ public class State {
         this.almacenX = almacenX;
         this.almacenY = almacenY;
         this.pedidos = pedidos;
+    }    public State(List<Vehiculo> vehiculo, BFS blocks, int almacenX, int almacenY,List<Pedido>pedidos,
+                      List<Almacen> almacenes) {
+        this.vehiculo = vehiculo;
+        this.blocks = blocks;
+        this.almacenX = almacenX;
+        this.almacenY = almacenY;
+        this.pedidos = pedidos;
+        this.almacenes = almacenes;
     }
     public State(List<Vehiculo> vehiculo, Problem problem) {
         this.vehiculo = vehiculo;
@@ -102,15 +110,17 @@ public class State {
         for (int i = 0; i < vehiculo.size(); i++) {
             Vehiculo vehicle = vehiculo.get(i);
             sb.append("Vehicle ").append(i + 1).append(" Route: ").append(vehicle.getRoute()).append("\n");
-            sb.append("Cost for Vehicle ").append(i + 1).append(": ").append(calculateEnergyForEach(vehicle, blocks, almacenX, almacenY)).append("\n");
+            sb.append("Cost for Vehicle ").append(i + 1).append(": ").append(calculateEnergyForEach(vehicle, blocks,
+                    vehicle.getNearestWarehouse().getX(), vehicle.getNearestWarehouse().getY())).append("\n");
 
             // Calculate and append the time for the vehicle's route
             String timeString = getTimeStringForVehicle(vehicle);
-
+            sb.append("Nearest Warehouse :").append(i + 1).append(" ( ").append(vehicle.getNearestWarehouse().getX())
+                    .append(" , ").append(vehicle.getNearestWarehouse().getY()).append(" ) ").append("\n");
             sb.append("Time for Vehicle ").append(i + 1).append(": ").append(timeString).append("\n");
+
         }
 
-        sb.append("Total Cost: ").append(calculateTotalEnergy(blocks, almacenX, almacenY)).append("\n");
 
         return sb.toString();
     }
@@ -163,12 +173,14 @@ public class State {
         double consumo = 0.0;
         double totalMinutes = 0.0;
         Cell warehouse = new Cell(12,8);
+        Cell warehouse1 = new Cell(42,42);
+        Cell warehouse2 = new Cell(63,3);
         for (int j = 0; j < route.size() - 1; j++) {
             Cell currentCell = route.get(j);
             long distance = currentCell.getDist();
             totalMinutes = totalMinutes + (double) distance / speed; // Time = Distance / Speed
             consumo = consumo + distance*3.5/150;
-            if(route.get(j) == warehouse) break;
+            if(route.get(j) == warehouse || route.get(j) == warehouse1 || route.get(j) == warehouse2 ) break;
         }
         System.out.println("\n Consumo total : " + consumo);
         return (long)totalMinutes;

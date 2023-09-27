@@ -9,11 +9,8 @@ import pucp.edu.pe.sap_backend.Ruta.BFS;
 import pucp.edu.pe.sap_backend.Ruta.BlockMap;
 import pucp.edu.pe.sap_backend.Ruta.Blocknode;
 import pucp.edu.pe.sap_backend.Ruta.Cell;
+import pucp.edu.pe.sap_backend.SimulatedAnnealing.*;
 import pucp.edu.pe.sap_backend.SimulatedAnnealing.AnotherApproach.S.A.Time;
-import pucp.edu.pe.sap_backend.SimulatedAnnealing.Problem;
-import pucp.edu.pe.sap_backend.SimulatedAnnealing.Route;
-import pucp.edu.pe.sap_backend.SimulatedAnnealing.SimulatedAnnealing;
-import pucp.edu.pe.sap_backend.SimulatedAnnealing.State;
 
 import java.util.*;
 
@@ -29,6 +26,10 @@ public class SapBackEndApplication {
         Random r = new Random();
         int low = 0; int high = 70;
 
+        List<Almacen>almacenes = new ArrayList<>();
+        almacenes.add(new Almacen(12,8));
+        almacenes.add(new Almacen(42,42));
+        almacenes.add(new Almacen(63,3));
 
         //PRIMER CUADRANTE
         Pedido pedido1 = new Pedido(123, 0, 50, 30, 2);
@@ -60,25 +61,25 @@ public class SapBackEndApplication {
         //genetico.setOrders(listaPedidos);
 
         Vehiculo vehiculo = new Vehiculo(1, 5, 0,
-                r.nextInt(high-low) + low, r.nextInt(high-low) + low);//(0,0) es donde parte)
+                r.nextInt(high-low) + low, r.nextInt(high-low) + low,almacenes);//(0,0) es donde parte)
         Vehiculo vehiculo1 = new Vehiculo(2, 5, 0,
-                r.nextInt(high-low) + low,r.nextInt(high-low) + low);//(0,0) es donde parte)
+                r.nextInt(high-low) + low,r.nextInt(high-low) + low,almacenes);//(0,0) es donde parte)
         Vehiculo vehiculo2 = new Vehiculo(3, 5, 0,
-                r.nextInt(high-low) + low, r.nextInt(high-low) + low);//(0,0) es donde parte)
+                r.nextInt(high-low) + low, r.nextInt(high-low) + low,almacenes);//(0,0) es donde parte)
         Vehiculo vehiculo3 = new Vehiculo(4, 5, 0,
-                r.nextInt(high-low) + low, r.nextInt(high-low) + low);//(0,0) es donde parte)
+                r.nextInt(high-low) + low, r.nextInt(high-low) + low,almacenes);//(0,0) es donde parte)
         Vehiculo vehiculo4 = new Vehiculo(5, 5, 0,
-                r.nextInt(high-low) + low, r.nextInt(high-low) + low);//(0,0) es donde parte)
+                r.nextInt(high-low) + low, r.nextInt(high-low) + low,almacenes);//(0,0) es donde parte)
         Vehiculo vehiculo5 = new Vehiculo(6, 5, 0,
-                r.nextInt(high-low) + low, r.nextInt(high-low) + low);//(0,0) es donde parte)
+                r.nextInt(high-low) + low, r.nextInt(high-low) + low,almacenes);//(0,0) es donde parte)
         Vehiculo vehiculo6 = new Vehiculo(6, 5, 0,
-                r.nextInt(high-low) + low, r.nextInt(high-low) + low);//(0,0) es donde parte)
+                r.nextInt(high-low) + low, r.nextInt(high-low) + low,almacenes);//(0,0) es donde parte)
         Vehiculo vehiculo7 = new Vehiculo(6, 5, 0,
-                r.nextInt(high-low) + low, r.nextInt(high-low) + low);//(0,0) es donde parte)
+                r.nextInt(high-low) + low, r.nextInt(high-low) + low,almacenes);//(0,0) es donde parte)
         Vehiculo vehiculo8 = new Vehiculo(6, 5, 0,
-                r.nextInt(high-low) + low, r.nextInt(high-low) + low);//(0,0) es donde parte)
+                r.nextInt(high-low) + low, r.nextInt(high-low) + low,almacenes);//(0,0) es donde parte)
         Vehiculo vehiculo9 = new Vehiculo(6, 5, 0,
-                r.nextInt(high-low) + low, r.nextInt(high-low) + low);//(0,0) es donde parte)
+                r.nextInt(high-low) + low, r.nextInt(high-low) + low,almacenes);//(0,0) es donde parte)
         ArrayList<Vehiculo> listaVehiculos = new ArrayList<>();
         listaVehiculos.add(vehiculo);
         listaVehiculos.add(vehiculo1);
@@ -112,7 +113,7 @@ public class SapBackEndApplication {
 
         //genetico.executeAlgorithm();
 
-        Problem problem = new Problem(listaVehiculos, new BFS(map), 12, 8, listaPedidos);
+        Problem problem = new Problem(listaVehiculos, new BFS(map),almacenes, listaPedidos);
         State initialState = problem.getInitialState();
         System.out.println("\nSimulated annealing: \n ");
 
