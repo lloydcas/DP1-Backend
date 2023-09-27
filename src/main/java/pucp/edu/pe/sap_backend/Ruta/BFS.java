@@ -15,6 +15,71 @@ public class BFS {
     }
 
     //BFS, Time O(n^2), Space O(n^2)
+   /*
+    public LinkedList<Cell> shortestPathMod(int[] start, int[] end, int type, Cell last) {
+        int sx = start[0], sy = start[1];
+        int dx = end[0], dy = end[1];
+
+        int m = map.getMap().length;
+        int n = map.getMap()[0].length;
+        int recorrido_tiempo = Math.abs(start[0] - end[0]) + Math.abs(start[1] - end[1]) + 30;
+        Cell[][] cells = new Cell[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                cells[i][j] = new Cell(i, j, recorrido_tiempo, null);
+            }
+        }
+
+        Cell dest = null;
+        int coord_x = 0;
+        int coord_y = 0;
+        boolean found = false; // Add a flag to track if the destination is found
+
+        LinkedList<Cell> queue = new LinkedList<>();
+        try {
+            Cell src = cells[sx][sy];
+            src.dist = 0;
+            queue.add(src);
+            if (last != null) {
+                src = cells[last.x][last.y];
+                src.dist = 1;
+                src.prev = queue.peek(); // Set prev to the first element in the queue
+                queue.add(src);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+            return null;
+        }
+
+        while (!queue.isEmpty()) { // Use a while loop to handle BFS properly
+            Cell p = queue.poll();
+            coord_x = p.x;
+            coord_y = p.y;
+
+            if (coord_x == dx && coord_y == dy) {
+                dest = p;
+                found = true;
+                break;
+            }
+
+            visit(cells, queue, coord_x - 1, coord_y, p, map, dx, dy);
+            visit(cells, queue, coord_x + 1, coord_y, p, map, dx, dy);
+            visit(cells, queue, coord_x, coord_y - 1, p, map, dx, dy);
+            visit(cells, queue, coord_x, coord_y + 1, p, map, dx, dy);
+        }
+
+        if (!found) {
+            return null; // No path to the destination was found
+        } else {
+            LinkedList<Cell> path = new LinkedList<>();
+            Cell p = dest;
+            do {
+                path.addFirst(p);
+            } while ((p = p.prev) != null);
+            return path;
+        }
+    }*/
+
     public LinkedList<Cell> shortestPath(int[] start, int[] end,int type, Cell last) {
         int sx = start[0], sy = start[1];
         int dx = end[0], dy = end[1];
@@ -85,22 +150,21 @@ public class BFS {
         }
     }
 
+
     //function to update cell visiting status, Time O(1), Space O(1)
     private void visit(Cell[][] cells, LinkedList<Cell> queue, int x, int y, Cell parent, BlockMap map, int dx, int dy) {
-        //out of boundary
         if (x < 0 || x >= cells.length || y < 0 || y >= cells[0].length || cells[x][y] == null) {
             return;
         }
 
-        //update distance, and previous node
         int dist = parent.dist + 1;
         Cell p = cells[x][y];
 
         boolean bloquea;
 
-        if(map.getMap()[x][y]!=null && map.getMap()[x][y].getBloqueado()){
+        if (map.getMap()[x][y] != null && map.getMap()[x][y].getBloqueado()) {
             bloquea = false;
-        }else{
+        } else {
             bloquea = true;
         }
 

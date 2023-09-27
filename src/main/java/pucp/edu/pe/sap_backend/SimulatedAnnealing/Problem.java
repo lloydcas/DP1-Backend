@@ -33,9 +33,22 @@ public class Problem {
     }
     public State getInitialState(){
         List<Vehiculo> clonedVehiculos = new ArrayList<>();
+        List<Pedido> remainingPedidos = new ArrayList<>(pedidos); // Create a copy of all orders
+
         for (Vehiculo vehicle : vehiculo) {
             clonedVehiculos.add(new Vehiculo(vehicle));
+
+            // Use a simple heuristic to assign orders to each vehicle
+            LinkedList<Pedido> ordersForVehicle = assignOrdersHeuristically(vehicle, remainingPedidos);
+
+            // Set the vehicle's route to the assigned orders
+            vehicle.setOrder(ordersForVehicle);
+            vehicle.generateRoute(blocks, almacenX, almacenY);
+
+            // Remove the assigned orders from the list of remaining orders
+            remainingPedidos.removeAll(ordersForVehicle);
         }
+
         return new State(clonedVehiculos, blocks, almacenX, almacenY, pedidos);
     }
 
@@ -76,7 +89,7 @@ public class Problem {
 
         for (Vehiculo vehiculo : state.getVehiculo()) {
             // Use the Route class to calculate the cost of each vehicle's route
-            Route route = new Route(vehiculo.getOrder().toArray(new Pedido[0]), state.getBlocks(), state.getAlmacenX(), state.getAlmacenY());
+            Route route = new Route(vehiculo.getOrder().toArray(new Pedido[0]), state.getBlocks());
             totalCost += route.getCost();
         }
 
@@ -86,5 +99,17 @@ public class Problem {
     public double getFinalCost(State state) {
         return calculateEnergy(state);
     }
+    public LinkedList<Pedido> assignOrdersHeuristically(Vehiculo vehicle, List<Pedido> orders) {
+        LinkedList<Pedido> assignedOrders = new LinkedList<>();
+        int remainingCapacity = vehicle.getCapacity();
 
+        for (Pedido order : orders) {
+            if (remainingCapacity >= order.getAmount()) {
+                assignedOrders.add(order);
+                remainingCapacity -= order.getAmount();
+            }
+        }
+
+        return assignedOrders;
+    }
 }

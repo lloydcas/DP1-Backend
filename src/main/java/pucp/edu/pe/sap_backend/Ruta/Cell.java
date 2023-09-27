@@ -22,6 +22,18 @@ public class Cell {
         this.blocked=false;
     }
 
+    public Cell(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+    public int manhattan(Cell node) {
+        int distX = Math.abs(node.getX() - x);
+        int distY = Math.abs(node.getY() - y);
+        return distX + distY;
+    }
+
+
+
     @Override
     public String toString(){
         return "(" + x + "," + y + ") , ";

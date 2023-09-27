@@ -20,66 +20,67 @@ public class Route {
     private BFS blocks;
     private LinkedList<Cell> route;
 
-    public Route(Pedido[] pedidos, BFS blocks, int almacenX, int almacenY) {
+    public Route(Pedido[] pedidos, BFS blocks) {
         this.numOrders = pedidos.length;
         this.blocks = blocks;
         this.path = pedidos; // Set the path to the provided pedidos
         cost = 0;
         this.route = new LinkedList<>();
-        calculateCost(almacenX, almacenY); // Remove the pedidos argument from here
+        calculateCost(); // Remove the pedidos argument from here
         fitness = 0;
+
     }
-    public void calculateCost(int almacenX,int almacenY) {
-        if (route.size() <= 1) {
+    public void calculateCost() {
+        if (path.length <= 1) {
             cost = 0.0; // No cost for empty or single-cell routes
             return;
         }
 
         cost = 0.0;
-        Cell prevCell = null;
 
-        for (Cell cell : route) {
-            if (prevCell != null) {
-                // Calculate the distance between consecutive cells using BFS
-                List<Cell> path = blocks.shortestPath(
-                        new int[]{prevCell.getX(), prevCell.getY()},
-                        new int[]{cell.getX(), cell.getY()},
-                        0,
-                        prevCell
-                );
+        for (int i = 0; i < path.length - 1; i++) {
+            Cell fromCell = path[i].getCell();
+            Cell toCell = path[i + 1].getCell();
 
-                if (path != null) {
-                    // Accumulate the distance in the cost
-                    for (int i = 0; i < path.size() - 1; i++) {
-                        cost += path.get(i).getDist();
-                    }
-                } else {
-                    // Handle the case when no path is found (e.g., set a high cost)
-                    cost += 10000.0; // Adjust this according to your requirements
+            // Calculate the distance between consecutive cells using BFS
+            List<Cell> path = blocks.shortestPath(
+                    new int[]{fromCell.getX(), fromCell.getY()},
+                    new int[]{toCell.getX(), toCell.getY()},
+                    0,
+                    null // You don't need the previous cell here
+            );
+
+            if (path != null) {
+                // Accumulate the distance in the cost
+                for (int j = 0; j < path.size() - 1; j++) {
+                    cost += path.get(j).getDist();
                 }
+            } else {
+                // Handle the case when no path is found (e.g., set a high cost)
+                cost += 10000.0; // Adjust this according to your requirements
             }
-
-            prevCell = cell;
-        }
-
-        // Add the distance from the last cell to the warehouse
-        List<Cell> pathToWarehouse = blocks.shortestPath(
-                new int[]{prevCell.getX(), prevCell.getY()},
-                new int[]{almacenX, almacenY},
-                0,
-                prevCell
-        );
-
-        if (pathToWarehouse != null) {
-            cost += pathToWarehouse.get(pathToWarehouse.size() - 1).getDist();
-        } else {
-            // Handle the case when no path to the warehouse is found
-            cost += 10000.0; // Adjust this according to your requirements
         }
     }
 
     public double getCost(){
         return cost;
     }
+
+    public List<Cell>getRoute(){return route;}
+
+    public void initializeRoute(int almacenX, int almacenY){
+        route.clear();  // Clear any existing route cells
+
+        // Add the starting warehouse cell to the route
+        Cell warehouseCell = new Cell(almacenX, almacenY);
+        route.add(warehouseCell);
+
+        // Add cells for each pedido in the path
+        for (Pedido pedido : path) {
+            Cell cell = new Cell(pedido.getX(), pedido.getY());
+            route.add(cell);
+        }
+    }
+
 
 }

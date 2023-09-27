@@ -1,6 +1,7 @@
 package pucp.edu.pe.sap_backend.Genetico;
 
 import jakarta.persistence.*;
+import pucp.edu.pe.sap_backend.Ruta.Cell;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +15,7 @@ public class Pedido implements Comparable{
     private int amount;
     private int assigned;
     private String estado;
+    private Cell cell;
     public int getAmount() {
         return amount;
     }
@@ -31,6 +33,7 @@ public class Pedido implements Comparable{
         this.id=id;
         this.amount=cantidad;
         this.assigned=0;
+        this.cell = new Cell(x, y);
     }
 
     public Pedido(Pedido pedido){
@@ -99,5 +102,9 @@ public class Pedido implements Comparable{
     @Override
     public int compareTo(Object o) {
         return 0;
+    }
+
+    public Cell getCell() {
+        return cell;
     }
 }

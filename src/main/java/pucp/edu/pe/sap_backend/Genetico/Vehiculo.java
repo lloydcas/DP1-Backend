@@ -4,7 +4,9 @@ import pucp.edu.pe.sap_backend.Ruta.BFS;
 import pucp.edu.pe.sap_backend.Ruta.Cell;
 import lombok.Getter;
 import lombok.Setter;
+import pucp.edu.pe.sap_backend.SimulatedAnnealing.AnotherApproach.S.A.Time;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -70,6 +72,7 @@ public class Vehiculo {
     private int xInicial;
 
     private int yInicial;
+
 
     public Vehiculo(int id, int capacity, int type, int x, int y) {
         this.id = id;
@@ -231,6 +234,7 @@ public class Vehiculo {
                 auxPath.getLast().prev.prev=null;
                 auxCell=auxPath.getLast().prev;
             }else{ auxCell=null;}
+            if(auxstart[0] == almacenX && auxstart[1] == almacenY) break;
         }
         auxEnd[0]=almacenX;auxEnd[1]=almacenY;
         auxPath = blocks.shortestPath(auxstart, auxEnd,this.type,null);
@@ -238,7 +242,6 @@ public class Vehiculo {
         this.route.addAll(auxPath);
         //Con el almacen (45,30)
     }
-
     public void addRoute(LinkedList<Cell> route) {
         this.route.clear();
         for (Cell c:route){
@@ -259,4 +262,5 @@ public class Vehiculo {
         System.out.println();
 
     }
+
 }

@@ -4,6 +4,7 @@ import pucp.edu.pe.sap_backend.Genetico.Path;
 import pucp.edu.pe.sap_backend.Genetico.Pedido;
 import pucp.edu.pe.sap_backend.Genetico.Vehiculo;
 import pucp.edu.pe.sap_backend.Ruta.BFS;
+import pucp.edu.pe.sap_backend.Ruta.Cell;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -89,7 +90,10 @@ public class State {
     public double getValue(BFS blocks, int almacenX, int almacenY) {
         return calculateTotalEnergy(blocks, almacenX, almacenY);
     }
-
+    private String getTimeStringForVehicle(Vehiculo vehicle) {
+        long totalMinutes = calculateTimeForVehicle(vehicle);
+        return formatTime(totalMinutes);
+    }
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -99,6 +103,11 @@ public class State {
             Vehiculo vehicle = vehiculo.get(i);
             sb.append("Vehicle ").append(i + 1).append(" Route: ").append(vehicle.getRoute()).append("\n");
             sb.append("Cost for Vehicle ").append(i + 1).append(": ").append(calculateEnergyForEach(vehicle, blocks, almacenX, almacenY)).append("\n");
+
+            // Calculate and append the time for the vehicle's route
+            String timeString = getTimeStringForVehicle(vehicle);
+
+            sb.append("Time for Vehicle ").append(i + 1).append(": ").append(timeString).append("\n");
         }
 
         sb.append("Total Cost: ").append(calculateTotalEnergy(blocks, almacenX, almacenY)).append("\n");
@@ -148,7 +157,33 @@ public class State {
         return new State(updatedVehiculos, blocks, almacenX, almacenY, pedidos);
     }
 
+    private long calculateTimeForVehicle(Vehiculo vehicle) {
+        List<Cell> route = vehicle.getRoute();
+        long speed = 50; // Assuming speed is in cell/minute
+        double consumo = 0.0;
+        double totalMinutes = 0.0;
+        Cell warehouse = new Cell(12,8);
+        for (int j = 0; j < route.size() - 1; j++) {
+            Cell currentCell = route.get(j);
+            long distance = currentCell.getDist();
+            totalMinutes = totalMinutes + (double) distance / speed; // Time = Distance / Speed
+            consumo = consumo + distance*3.5/150;
+            if(route.get(j) == warehouse) break;
+        }
+        System.out.println("\n Consumo total : " + consumo);
+        return (long)totalMinutes;
+    }
+    private String formatTime(long totalMinutes) {
+        long days = totalMinutes / (24 * 60);
+        long hours = (totalMinutes % (24 * 60)) / 60;
+        long minutes = totalMinutes % 60;
+        long seconds = totalMinutes * 60 % 60; // Calculate remaining seconds
 
+        return "\n{Day " + String.format("%02d", days + 1) + ": (" +
+                String.format("%02d", hours) + ":" +
+                String.format("%02d", minutes) + ":" +
+                String.format("%02d", seconds) + ")}\n";
+    }
 
 
 }

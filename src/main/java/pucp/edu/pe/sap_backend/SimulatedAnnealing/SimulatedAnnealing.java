@@ -1,9 +1,6 @@
 package pucp.edu.pe.sap_backend.SimulatedAnnealing;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class SimulatedAnnealing {
     private Random random = new Random();
@@ -11,7 +8,7 @@ public class SimulatedAnnealing {
         State current = problem.getInitialState(); // Use the updated method to get the initial state
         for (int t = 0;t < maxIterations; t++) {
             double temperature = schedule.getOrDefault(t, 0.0);
-            if (temperature == 0) {
+            if (temperature == 0.0) {
                 return current;
             }
             State next = problem.getRandomSuccessor(current); // Use the updated method to get a random successor
